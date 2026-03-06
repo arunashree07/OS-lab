@@ -1,0 +1,72 @@
+#include<stdio.h>
+
+int main()
+{
+    int n, AT[10], WT[10], BT[10],CT[10], TAT[10], PID[10],curr_time;
+    float Wsum, Tsum, AvgTAT, AvgWT;
+    Wsum=0, Tsum=0;
+    printf("Enter the number of processes: ");
+    scanf("%d",&n);
+
+    for(int i=0;i<n;i++)
+    {
+        printf("\nEnter arrival time %d: ", (i+1));
+        scanf("%d",&AT[i]);
+        printf("Enter burst time %d: ", (i+1));
+        scanf("%d",&BT[i]);
+        PID[i]=i;
+    }
+
+    for (int i = 0; i < n - 1; i++) 
+    {
+        for (int j = 0; j < n - i - 1; j++) 
+        {
+            if (AT[j] > AT[j + 1])
+            {
+                int temp = AT[j];
+                AT[j] =AT[j + 1];
+                AT[j + 1] = temp;
+
+                int temp2 = BT[j];
+                BT[j] =BT[j + 1];
+                BT[j + 1] = temp2;
+
+                int temp3 = PID[j];
+                PID[j] =PID[j + 1];
+                PID[j + 1] = temp3;
+            }
+        }
+    }
+    curr_time =0;
+
+    for(int i=0;i<n;i++)
+    {
+        if (curr_time<AT[i])
+        {
+            curr_time=AT[i];
+        }
+        CT[i]=curr_time+BT[i];
+        TAT[i]=CT[i]-AT[i];
+        WT[i]=TAT[i]-BT[i];
+        curr_time=CT[i];
+    }
+
+    for(int i=0;i<n;i++)
+    {
+        Wsum+=WT[i];
+        Tsum+=TAT[i];
+    }
+    
+    AvgWT = (Wsum/n);
+    AvgTAT = (Tsum/n);
+
+    printf("\nPID\tAT\tBT\tCT\tTAT\tWT");
+    printf("\n------------------------------------------\n");
+    for(int i=0;i<n;i++)
+    {
+        printf("%d\t%d\t%d\t%d\t%d\t%d\n", (PID[i]+1),AT[i],BT[i],CT[i],TAT[i],WT[i]);
+    }
+
+    printf("\nThe average waiting time is %f", AvgWT);
+    printf("\nThe average turnaround time is %f", AvgTAT);
+}
